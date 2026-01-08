@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Snippet",
+  "version": "1.0.0",
+  "description": "A powerful LeetCode assistant with multi-language templates and snippets.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*", "https://leetcode.cn/problems/*"],
+      "js": ["prism.js", "content.js"],
+      "css": ["prism.css", "content.css"]
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_icon": "icon.png"
+  },
+"background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}
