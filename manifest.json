@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "LeetCode Snippet",
+  "name": "LeetCode Snippets",
   "version": "1.0.0",
   "description": "A powerful LeetCode assistant with multi-language templates and snippets.",
   "permissions": ["storage"],
