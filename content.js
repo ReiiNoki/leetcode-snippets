@@ -519,13 +519,25 @@ document.addEventListener("mouseup", () => {
     toggleBtn.style.transition = "left 0.3s";
   }
 });
-toggleBtn.onclick = () => {
-  if (!hasMovedBtn) sidebar.classList.toggle("open");
+toggleBtn.onclick = (e) => {
+    // 如果刚才进行了拖动操作，就不执行
+    if (hasMovedBtn) return;
+
+    // 打开侧边栏
+    sidebar.classList.add('open');
+
+    // === 新增：把自己隐藏起来 ===
+    toggleBtn.classList.add('hidden');
 };
 
 // 侧边栏操作
-document.getElementById("close-sidebar").onclick = () =>
-  sidebar.classList.remove("open");
+// 侧边栏关闭按钮逻辑
+document.getElementById("close-sidebar").onclick = () => {
+    // 关闭侧边栏
+    sidebar.classList.remove("open");
+    // === 新增：把悬浮按钮显示出来 ===
+    toggleBtn.classList.remove('hidden');
+};
 document.getElementById("theme-toggle").onclick = () => {
   const newTheme =
     sidebar.getAttribute("data-theme") === "light" ? "dark" : "light";

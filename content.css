@@ -50,6 +50,12 @@
 #lc-snippet-sidebar.open {
   left: 0;
 }
+
+/* 给悬浮按钮添加一个隐藏状态 */
+#lc-sidebar-toggle.hidden {
+  display: none !important;
+}
+
 .resize-handle {
   position: absolute;
   top: 0;
