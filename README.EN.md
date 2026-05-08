@@ -4,9 +4,9 @@
 
 # LeetCode Snippets
 
-A powerful Chrome/Edge browser extension to help LeetCode users write code more efficiently on the platform's editor.
-
 English | [中文](./README.md)
+
+A powerful Chrome/Edge browser extension to help LeetCode users write code more efficiently on the platform's editor.
 
 ## Features
 
