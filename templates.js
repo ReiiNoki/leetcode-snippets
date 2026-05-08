@@ -48,7 +48,7 @@ export const defaultSnippets = [
 
     // 二分猜答案：判断 mid 是否满足题目要求
     private boolean check(int mid, int[] nums) {
-        
+
     }
 }`,
 
@@ -59,7 +59,7 @@ public:
     int binarySearchMin(vector<int>& nums) {
         // 二分猜答案：判断 mid 是否满足题目要求
         auto check = [&](int mid) -> bool {
-            
+
         };
 
         int left = ; // 循环不变量：check(left) 恒为 false
@@ -84,7 +84,7 @@ public:
 func binarySearchMin(nums []int) int {
     // 二分猜答案：判断 mid 是否满足题目要求
     check := func(mid int) bool {
-        
+
     }
 
     left :=  // 循环不变量：check(left) 恒为 false
@@ -151,10 +151,32 @@ func binarySearchMin(nums []int) int {
 
     // 二分猜答案：判断 mid 是否满足题目要求
     private boolean check(int mid, int[] nums) {
-        
+
     }
 }`,
+"Go":
+`// 计算满足 check(x) == true 的最小整数 x
+func binarySearchMin(nums []int) int {
+    // 二分猜答案：判断 mid 是否满足题目要求
+    check := func(mid int) bool {
 
+    }
+
+    left :=  // 循环不变量：check(left) 恒为 false
+    right :=  // 循环不变量：check(right) 恒为 true
+    for left+1 < right { // 开区间不为空
+        mid := left + (right-left)/2
+		if check(mid) { // 说明 check(>= mid 的数) 均为 true
+            right = mid // 接下来在 (left, mid) 中二分答案
+        } else { // 说明 check(<= mid 的数) 均为 false
+            left = mid // 接下来在 (mid, right) 中二分答案
+        }
+    }
+    // 循环结束后 left+1 = right
+    // 此时 check(left) == false 而 check(left+1) == check(right) == true
+    // 所以 right 就是最小的满足 check 的值
+    return right
+}`,
 "C++":
 `class Solution {
 public:
@@ -162,7 +184,7 @@ public:
     int binarySearchMax(vector<int>& nums) {
         // 二分猜答案：判断 mid 是否满足题目要求
         auto check = [&](int mid) -> bool {
-            
+
         };
 
         int left = ; // 循环不变量：check(left) 恒为 true
@@ -1599,7 +1621,7 @@ def colorBipartite(n: int, edges: List[List[int]]) -> List[int]:
         for (int y : g[x]) {
             // 邻居 y 的颜色与 x 的相同，说明不是二分图，返回 false
             // 或者继续递归，发现不是二分图，返回 false
-            if (colors[y] == c || 
+            if (colors[y] == c ||
                 colors[y] == 0 && !dfs(y, 3 - c, g, colors)) { // 1 和 2 交替染色
                 return false;
             }
@@ -1633,7 +1655,7 @@ vector<int8_t> colorBipartite(int n, vector<vector<int>>& edges) {
         for (int y : g[x]) {
             // 邻居 y 的颜色与 x 的相同，说明不是二分图，返回 false
             // 或者继续递归，发现不是二分图，返回 false
-            if (colors[y] == c || 
+            if (colors[y] == c ||
                 colors[y] == 0 && !dfs(y, 3 - c)) { // 1 和 2 交替染色
                 return false;
             }
@@ -4795,7 +4817,7 @@ class Solution {
     }
 
     public int solve(int[] nums) {
-        
+
     }
 }`,
 
@@ -4839,7 +4861,7 @@ func init() {
         }
     },
     {
-        title: "质因数分解",
+        title: "质因数分解（预处理每个数的所有不同质因子）",
         data: {
 "Python":
 `MX = 1_000_001
@@ -4907,7 +4929,145 @@ def prime_factorization(x: int) -> List[Tuple[int, int]]:
     }
 
     public int solve(int[] nums) {
-        
+
+    }
+}`,
+
+"C++":
+`constexpr int MX = 1'000'001;
+int lpf[MX];
+
+int init = [] {
+    for (int i = 2; i < MX; i++) {
+        if (lpf[i] == 0) { // i 是质数
+            for (int j = i; j < MX; j += i) {
+                if (lpf[j] == 0) { // 首次访问 j
+                    lpf[j] = i;
+                }
+            }
+        }
+    }
+    return 0;
+}();
+
+// 质因数分解
+// 例如 prime_factorization(45) = {{3, 2}, {5, 1}}，表示 45 = 3^2 * 5^1
+// 时间复杂度 O(log x)
+vector<pair<int, int>> prime_factorization(int x) {
+    vector<pair<int, int>> res;
+    while (x > 1) {
+        int p = lpf[x];
+        int e = 1;
+        for (x /= p; x % p == 0; x /= p) {
+            e++;
+        }
+        res.emplace_back(p, e);
+    }
+    return res;
+}`,
+
+"Go":
+`const mx = 1_000_001
+
+var lpf = [mx]int{}
+
+func init() {
+	for i := 2; i < mx; i++ {
+		if lpf[i] == 0 { // i 是质数
+			for j := i; j < mx; j += i {
+				if lpf[j] == 0 { // 首次访问 j
+					lpf[j] = i
+				}
+			}
+		}
+	}
+}
+
+// 质因数分解
+// 例如 primeFactorization(45) = [[3, 2], [5, 1]]，表示 45 = 3^2 * 5^1
+// 时间复杂度 O(log x)
+func primeFactorization(x int) (res [][2]int) {
+	for x > 1 {
+		p := lpf[x]
+		e := 1
+		for x /= p; x%p == 0; x /= p {
+			e++
+		}
+		res = append(res, [2]int{p, e})
+	}
+	return
+}`
+        }
+    },
+    {
+        title: "质因数分解（预处理 x 的最小质因子 LPF(x)）",
+        data: {
+"Python":
+`MX = 1_000_001
+lpf = [0] * MX
+for i in range(2, MX):
+    if lpf[i] == 0:  # i 是质数
+        for j in range(i, MX, i):
+            if lpf[j] == 0:  # 首次访问 j
+                lpf[j] = i
+
+# 质因数分解
+# 例如 prime_factorization(45) = [(3, 2), (5, 1)]，表示 45 = 3**2 * 5**1
+# 时间复杂度 O(log x)
+def prime_factorization(x: int) -> List[Tuple[int, int]]:
+    res = []
+    while x > 1:
+        p = lpf[x]
+        e = 1
+        x //= p
+        while x % p == 0:
+            e += 1
+            x //= p
+        res.append((p, e))
+    return res`,
+
+"Java":
+`class Solution {
+    private static final int MX = 1_000_001;
+    private static final int[] lpf = new int[MX];
+    private static boolean initialized = false;
+
+    // 这样写比 static block 快
+    public Solution() {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
+
+        for (int i = 2; i < MX; i++) {
+            if (lpf[i] == 0) { // i 是质数
+                for (int j = i; j < MX; j += i) {
+                    if (lpf[j] == 0) { // 首次访问 j
+                        lpf[j] = i;
+                    }
+                }
+            }
+        }
+    }
+
+    // 质因数分解
+    // 例如 primeFactorization(45) = [[3, 2], [5, 1]]，表示 45 = 3^2 * 5^1
+    // 时间复杂度 O(log x)
+    private List<int[]> primeFactorization(int x) {
+        List<int[]> res = new ArrayList<>();
+        while (x > 1) {
+            int p = lpf[x];
+            int e = 1;
+            for (x /= p; x % p == 0; x /= p) {
+                e++;
+            }
+            res.add(new int[]{p, e});
+        }
+        return res;
+    }
+
+    public int solve(int[] nums) {
+
     }
 }`,
 
@@ -5011,7 +5171,7 @@ for i in range(1, MX):
     }
 
     public int solve(int[] nums) {
-        
+
     }
 }`,
 
@@ -5146,7 +5306,7 @@ for x in gen_palindrome():
     }
 
     public int solve(int n) {
-        
+
     }
 }`,
 
@@ -5261,7 +5421,7 @@ func init() {
         for i in range(k.bit_length()):
             if k >> i & 1:
                 node = pa[i][node]
-                if node < 0: 
+                if node < 0:
                     return -1
         return node
 
@@ -6038,6 +6198,412 @@ impl Trie {
     fn starts_with(&self, prefix: String) -> bool {
         self.find(prefix) != 0
     }
+}`
+        }
+    },
+    {
+        title: "线性基（最大异或和）",
+        data: {
+"Python":`
+class XorBasis:
+    # n 为值域最大值 U 的二进制长度，例如 U=1e9 时 n=30
+    def __init__(self, n: int):
+        self.b = [0] * n
+
+    def insert(self, x: int) -> None:
+        b = self.b
+        # 从高到低遍历，保证计算 max_xor 的时候，参与 XOR 的基的最高位（或者说二进制长度）是互不相同的
+        for i in range(len(b) - 1, -1, -1):
+            if x >> i:  # 由于大于 i 的位都被我们异或成了 0，所以 x >> i 的结果只能是 0 或 1
+                if b[i] == 0:  # x 和之前的基是线性无关的
+                    b[i] = x  # 新增一个基，最高位为 i
+                    return
+                x ^= b[i]  # 保证每个基的二进制长度互不相同
+        # 正常循环结束，此时 x=0，说明一开始的 x 可以被已有基表出，不是一个线性无关基
+
+    def max_xor(self) -> int:
+        b = self.b
+        res = 0
+        # 从高到低贪心：越高的位，越必须是 1
+        # 由于每个位的基至多一个，所以每个位只需考虑异或一个基，若能变大，则异或之
+        for i in range(len(b) - 1, -1, -1):
+            if res ^ b[i] > res:  # 手写 max 更快
+                res ^= b[i]
+        return res
+`,
+"Java":`
+class XorBasis {
+    private final int[] b;
+
+    // n 为值域最大值 U 的二进制长度，例如 U=1e9 时 n=30
+    public XorBasis(int n) {
+        b = new int[n];
+    }
+
+    public void insert(int x) {
+        // 从高到低遍历，保证计算 maxXor 的时候，参与 XOR 的基的最高位（或者说二进制长度）是互不相同的
+        for (int i = b.length - 1; i >= 0; i--) {
+            if ((x >> i) > 0) { // 由于大于 i 的位都被我们异或成了 0，所以 x >> i 的结果只能是 0 或 1
+                if (b[i] == 0) { // x 和之前的基是线性无关的
+                    b[i] = x; // 新增一个基，最高位为 i
+                    return;
+                }
+                x ^= b[i]; // 保证每个基的二进制长度互不相同
+            }
+        }
+        // 正常循环结束，此时 x=0，说明一开始的 x 可以被已有基表出，不是一个线性无关基
+    }
+
+    public int maxXor() {
+        int res = 0;
+        // 从高到低贪心：越高的位，越必须是 1
+        // 由于每个位的基至多一个，所以每个位只需考虑异或一个基，若能变大，则异或之
+        for (int i = b.length - 1; i >= 0; i--) {
+            res = Math.max(res, res ^ b[i]);
+        }
+        return res;
+    }
+}`,
+"C++":`
+class XorBasis {
+    vector<int> b;
+
+public:
+    // n 为值域最大值 U 的二进制长度，例如 U=1e9 时 n=30
+    XorBasis(int n) : b(n) {}
+
+    void insert(int x) {
+        // 从高到低遍历，保证计算 max_xor 的时候，参与 XOR 的基的最高位（或者说二进制长度）是互不相同的
+        for (int i = b.size() - 1; i >= 0; i--) {
+            if (x >> i) { // 由于大于 i 的位都被我们异或成了 0，所以 x >> i 的结果只能是 0 或 1
+                if (b[i] == 0) { // x 和之前的基是线性无关的
+                    b[i] = x; // 新增一个基，最高位为 i
+                    return;
+                }
+                x ^= b[i]; // 保证每个基的二进制长度互不相同
+            }
+        }
+        // 正常循环结束，此时 x=0，说明一开始的 x 可以被已有基表出，不是一个线性无关基
+    }
+
+    int max_xor() {
+        int res = 0;
+        // 从高到低贪心：越高的位，越必须是 1
+        // 由于每个位的基至多一个，所以每个位只需考虑异或一个基，若能变大，则异或之
+        for (int i = b.size() - 1; i >= 0; i--) {
+            res = max(res, res ^ b[i]);
+        }
+        return res;
+    }
+};`,
+"Go":`
+type xorBasis []int
+
+// n 为值域最大值 U 的二进制长度，例如 U=1e9 时 n=30
+func newXorBasis(n int) xorBasis {
+    return make(xorBasis, n)
+}
+
+func (b xorBasis) insert(x int) {
+    // 从高到低遍历，保证计算 maxXor 的时候，参与 XOR 的基的最高位（或者说二进制长度）是互不相同的
+    for i := len(b) - 1; i >= 0; i-- {
+        if x>>i == 0 { // 由于大于 i 的位都被我们异或成了 0，所以 x>>i 的结果只能是 0 或 1
+            continue
+        }
+        if b[i] == 0 { // x 和之前的基是线性无关的
+            b[i] = x // 新增一个基，最高位为 i
+            return
+        }
+        x ^= b[i] // 保证每个基的二进制长度互不相同
+    }
+    // 正常循环结束，此时 x=0，说明一开始的 x 可以被已有基表出，不是一个线性无关基
+}
+
+func (b xorBasis) maxXor() (res int) {
+    // 从高到低贪心：越高的位，越必须是 1
+    // 由于每个位的基至多一个，所以每个位只需考虑异或一个基，若能变大，则异或之
+    for i := len(b) - 1; i >= 0; i-- {
+        res = max(res, res^b[i])
+    }
+    return
+}`
+        }
+    },
+    {
+        title: "二维前缀和",
+        data: {
+"Python":
+`class NumMatrix:
+    def __init__(self, matrix: List[List[int]]):
+        m, n = len(matrix), len(matrix[0])
+        s = [[0] * (n + 1) for _ in range(m + 1)]
+        for i, row in enumerate(matrix):
+            for j, x in enumerate(row):
+                s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + x
+        self.s = s
+
+    # 返回左上角在 (r1, c1)，右下角在 (r2, c2) 的子矩阵元素和
+    def sumRegion(self, r1: int, c1: int, r2: int, c2: int) -> int:
+        s = self.s
+        return s[r2 + 1][c2 + 1] - s[r2 + 1][c1] - s[r1][c2 + 1] + s[r1][c1]`,
+
+"Java":
+`class NumMatrix {
+    private final int[][] sum;
+
+    public NumMatrix(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        sum = new int[m + 1][n + 1];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sum[i + 1][j + 1] = sum[i + 1][j] + sum[i][j + 1] - sum[i][j] + matrix[i][j];
+            }
+        }
+    }
+
+    // 返回左上角在 (r1, c1)，右下角在 (r2, c2) 的子矩阵元素和
+    public int sumRegion(int r1, int c1, int r2, int c2) {
+        return sum[r2 + 1][c2 + 1] - sum[r2 + 1][c1] - sum[r1][c2 + 1] + sum[r1][c1];
+    }
+}`,
+
+"C++":
+`class NumMatrix {
+    vector<vector<int>> sum;
+
+public:
+    NumMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        sum.resize(m + 1, vector<int>(n + 1));
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sum[i + 1][j + 1] = sum[i + 1][j] + sum[i][j + 1] - sum[i][j] + matrix[i][j];
+            }
+        }
+    }
+
+    // 返回左上角在 (r1, c1)，右下角在 (r2, c2) 的子矩阵元素和
+    int sumRegion(int r1, int c1, int r2, int c2) {
+        return sum[r2 + 1][c2 + 1] - sum[r2 + 1][c1] - sum[r1][c2 + 1] + sum[r1][c1];
+    }
+};`,
+
+"Go":
+`type NumMatrix [][]int
+
+func Constructor(matrix [][]int) NumMatrix {
+    m, n := len(matrix), len(matrix[0])
+    sum := make([][]int, m+1)
+    sum[0] = make([]int, n+1)
+    for i, row := range matrix {
+        sum[i+1] = make([]int, n+1)
+        for j, x := range row {
+            sum[i+1][j+1] = sum[i+1][j] + sum[i][j+1] - sum[i][j] + x
+        }
+    }
+    return sum
+}
+
+// 返回左上角在 (r1, c1)，右下角在 (r2, c2) 的子矩阵元素和
+func (s NumMatrix) SumRegion(r1, c1, r2, c2 int) int {
+    return s[r2+1][c2+1] - s[r2+1][c1] - s[r1][c2+1] + s[r1][c1]
+}`
+        }
+    },
+    {
+        title: "凸包",
+        data: {
+"Python":
+`class Vec:
+    __slots__ = 'x', 'y'
+
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
+
+    def __sub__(self, b: "Vec") -> "Vec":
+        return Vec(self.x - b.x, self.y - b.y)
+
+    def det(self, b: "Vec") -> int:
+        return self.x * b.y - self.y * b.x
+
+
+# Andrew 算法，计算 points 的凸包（逆时针顺序）
+# 时间复杂度 O(n log n)，其中 n = len(points)
+def convexHull(points: List[Vec]) -> List[Vec]:
+    if len(points) <= 1:
+        return points
+
+    points.sort(key=lambda p: (p.x, p.y))
+
+    q = []
+
+    # 计算下凸包（从左到右）
+    for p in points:
+        # 新来的点 p，能否让旧的点变成在凸包内的点？ ->  需要判断向量左右关系  ->  det
+        while len(q) > 1 and (q[-1] - q[-2]).det(p - q[-1]) <= 0:
+            q.pop()
+        q.append(p)
+
+    # 计算上凸包（从右到左）
+    # 注意下凸包的最后一个点，已经是上凸包的（右边）第一个点了，所以从 n-2 开始遍历
+    lower_size = len(q)
+    for i in range(len(points) - 2, -1, -1):
+        p = points[i]
+        while len(q) > lower_size and (q[-1] - q[-2]).det(p - q[-1]) <= 0:
+            q.pop()
+        q.append(p)
+
+    # 此时首尾是同一个点 points[0]，需要去掉
+    q.pop()
+
+    return q`,
+
+"Java":
+`class Vec {
+    int x, y;
+
+    Vec(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Vec sub(Vec b) {
+        return new Vec(x - b.x, y - b.y);
+    }
+
+    long det(Vec b) {
+        return (long) x * b.y - (long) y * b.x;
+    }
+}
+
+class Solution {
+    // Andrew 算法，计算 points 的凸包（逆时针顺序）
+    // 时间复杂度 O(n log n)，其中 n = points.size()
+    public List<Vec> convexHull(List<Vec> points) {
+        if (points.size() <= 1) {
+            return points;
+        }
+
+        points.sort((a, b) -> a.x != b.x ? a.x - b.x : a.y - b.y);
+
+        List<Vec> q = new ArrayList<>();
+
+        // 计算下凸包（从左到右）
+        for (Vec p : points) {
+            // 新来的点 p，能否让旧的点变成在凸包内的点？ ->  需要判断向量左右关系  ->  det
+            while (q.size() > 1 && q.getLast().sub(q.get(q.size() - 2)).det(p.sub(q.getLast())) <= 0) {
+                q.removeLast();
+            }
+            q.add(p);
+        }
+
+        // 计算上凸包（从右到左）
+        // 注意下凸包的最后一个点，已经是上凸包的（右边）第一个点了，所以从 n-2 开始遍历
+        int lowerSize = q.size();
+        for (int i = points.size() - 2; i >= 0; i--) {
+            Vec p = points.get(i);
+            while (q.size() > lowerSize && q.getLast().sub(q.get(q.size() - 2)).det(p.sub(q.getLast())) <= 0) {
+                q.removeLast();
+            }
+            q.add(p);
+        }
+
+        // 此时首尾是同一个点 points[0]，需要去掉
+        q.removeLast();
+
+        return q;
+    }
+}`,
+
+"C++":
+`struct Vec {
+    int x, y;
+
+    Vec sub(const Vec& b) const {
+        return {x - b.x, y - b.y};
+    }
+
+    long long det(const Vec& b) const {
+        return 1LL * x * b.y - 1LL * y * b.x;
+    }
+};
+
+// Andrew 算法，计算 points 的凸包（逆时针顺序）
+// 时间复杂度 O(n log n)，其中 n = points.size()
+vector<Vec> convexHull(vector<Vec>& points) {
+    ranges::sort(points, {}, [](auto& p) { return pair(p.x, p.y); });
+
+    vector<Vec> q;
+
+    // 计算下凸包（从左到右）
+    for (auto& p : points) {
+        // 新来的点 p，能否让旧的点变成在凸包内的点？ ->  需要判断向量左右关系  ->  det
+        while (q.size() > 1 && q.back().sub(q[q.size() - 2]).det(p.sub(q.back())) <= 0) {
+            q.pop_back();
+        }
+        q.push_back(p);
+    }
+
+    // 计算上凸包（从右到左）
+    // 注意下凸包的最后一个点，已经是上凸包的（右边）第一个点了，所以从 n-2 开始遍历
+    int lower_size = q.size();
+    for (int i = (int) points.size() - 2; i >= 0; i--) {
+        auto& p = points[i];
+        while (q.size() > lower_size && q.back().sub(q[q.size() - 2]).det(p.sub(q.back())) <= 0) {
+            q.pop_back();
+        }
+        q.push_back(p);
+    }
+
+    // 此时首尾是同一个点 points[0]，需要去掉
+    q.pop_back();
+
+    return q;
+}`,
+
+"Go":
+`type vec struct{ x, y int }
+
+func (a vec) sub(b vec) vec { return vec{a.x - b.x, a.y - b.y} }
+func (a vec) det(b vec) int { return a.x*b.y - a.y*b.x }
+
+// Andrew 算法，计算 points 的凸包（逆时针顺序）
+// 时间复杂度 O(n log n)，其中 n = len(points)
+func convexHull(points []vec) []vec {
+    if len(points) <= 1 {
+        return points
+    }
+
+    slices.SortFunc(points, func(a, b vec) int { return cmp.Or(a.x-b.x, a.y-b.y) })
+
+    q := []vec{}
+
+    // 计算下凸包（从左到右）
+    for _, p := range points {
+        // 新来的点 p，能否让旧的点变成在凸包内的点？ ->  需要判断向量左右关系  ->  det
+        for len(q) > 1 && q[len(q)-1].sub(q[len(q)-2]).det(p.sub(q[len(q)-1])) <= 0 {
+            q = q[:len(q)-1]
+        }
+        q = append(q, p)
+    }
+
+    // 计算上凸包（从右到左）
+    // 注意下凸包的最后一个点，已经是上凸包的（右边）第一个点了，所以从 n-2 开始遍历
+    lowerSize := len(q)
+    for i := len(points) - 2; i >= 0; i-- {
+        p := points[i]
+        for len(q) > lowerSize && q[len(q)-1].sub(q[len(q)-2]).det(p.sub(q[len(q)-1])) <= 0 {
+            q = q[:len(q)-1]
+        }
+        q = append(q, p)
+    }
+
+    // 此时首尾是同一个点 points[0]，需要去掉
+    q = q[:len(q)-1]
+
+    return q
 }`
         }
     }
