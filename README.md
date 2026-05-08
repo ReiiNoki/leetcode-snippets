@@ -4,7 +4,10 @@
 
 # LeetCode Snippets
 
+[English](./README.EN.md) | 中文
+
 本项目是一个Chrome/Edge浏览器插件，用于方便LeetCode用户在网站编辑器上编写代码。
+
 
 ## 功能
 
